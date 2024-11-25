@@ -5,6 +5,8 @@ __pycache__/
 
 # C extensions
 *.so
+Project-Guide.md
+README.md
 
 # Distribution / packaging
 .Python
