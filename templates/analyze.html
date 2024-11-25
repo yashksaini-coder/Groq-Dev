@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Insight Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #007bff;
+      --secondary-color: #323538;
+      --accent-color: #17a2b8;
+      --background-color: #afd4f9;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.6;
+      background-color: var(--background-color);
+      padding-bottom: 80px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
+    header {
+      margin-bottom: 40px;
+      text-align: center;
+      animation: fadeInDown 0.5s ease;
+    }
+
+    h1 {
+      color: #0056b3;
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      animation: fadeInGlow 1s ease-in-out, textGlow 2s ease-in-out infinite alternate;
+      text-shadow: 0 0 5px rgba(0, 86, 179, 0.6);
+    }
+
+    h1:hover {
+      cursor: pointer;
+    }
+
+    @keyframes fadeInGlow {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      70% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes textGlow {
+      0% {
+        text-shadow: 0 0 5px rgba(0, 86, 179, 0.6), 0 0 10px rgba(0, 86, 179, 0.4), 0 0 20px rgba(23, 162, 184, 0.3);
+      }
+
+      70% {
+        text-shadow: 0 0 10px rgba(0, 86, 179, 0.8), 0 0 20px rgba(0, 123, 255, 0.6), 0 0 30px rgba(23, 162, 184, 0.5);
+      }
+    }
+
+    .subtitle {
+      color: var(--secondary-color);
+      font-size: 18px;
+      opacity: 0;
+      animation: fadeInSubtitle 1s ease forwards;
+      transition: color 0.3s ease;
+    }
+
+    .subtitle:hover {
+      color: darkblue;
+    }
+
+    @keyframes fadeInSubtitle {
+      to {
+        opacity: 1;
+      }
+    }
+
+
+    .input-section {
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      margin-bottom: 40px;
+      animation: fadeInUp 0.5s ease;
+      transition: box-shadow 0.3s ease, transform 0.3s ease, border 0.3s ease;
+      position: relative;
+    }
+
+    .input-section::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      border-radius: 14px;
+
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    .input-section:hover::before {
+      opacity: 1;
+      filter: blur(8px);
+      /* Creates a soft glow effect */
+    }
+
+    .input-section:hover {
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2), 0 0 20px rgba(23, 162, 184, 0.3);
+      transform: translateY(-5px);
+      background: #f9f9ff;
+    }
+
+
+    .form-group {
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--secondary-color);
+      font-weight: 500;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 14px 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: #f8f8f8;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 500;
+      width: 100%;
+      margin-bottom: 30px;
+      transition: background-color 0.3s ease;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .preview-section {
+      margin: 40px 0;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    #image-preview {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .result-section {
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      animation: fadeInUp 0.5s ease;
+    }
+
+    .result-section h2 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    /* Loading Animation Styles */
+    .loader-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .loader {
+      width: 100px;
+      height: 100px;
+      border: 6px solid var(--primary-color);
+      border-top: 6px solid var(--accent-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loader-text {
+      margin-top: 20px;
+      font-size: 18px;
+      color: var(--primary-color);
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInDown {
+      0% {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Translation widget positioning */
+    .gtranslate_wrapper {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .input-section,
+      .result-section {
+        padding: 30px;
+      }
+
+      button {
+        margin-bottom: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loader-container" id="loader-container">
+    <div class="loader"></div>
+    <div class="loader-text">Analyzing your health data...</div>
+  </div>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-heartbeat"></i> Health Insight Analyzer</h1>
+      <div class="subtitle">Get personalized insights into your health</div>
+    </header>
+    <main>
+      <section class="input-section">
+        <form id="health-form" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="gender"><i class="fas fa-venus-mars"></i> Gender</label>
+            <select id="gender" name="gender" required>
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="symptoms"><i class="fas fa-thermometer"></i> Symptoms</label>
+            <input type="text" id="symptoms" name="symptoms" placeholder="E.g., headache, fever, fatigue" required>
+          </div>
+          <div class="form-group">
+            <label for="body-part"><i class="fas fa-child"></i> Affected Body Part</label>
+            <input type="text" id="body-part" name="body-part" placeholder="E.g., head, chest, arm" required>
+          </div>
+          <div class="form-group">
+            <label for="layer"><i class="fas fa-layer-group"></i> Layer Affected</label>
+            <select id="layer" name="layer" required>
+              <option value="">Select layer</option>
+              <option value="internal">Internal</option>
+              <option value="external">External</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="image"><i class="fas fa-image"></i> Upload Image (optional)</label>
+            <input type="file" id="image" name="image" accept="image/*" onchange="handleImageUpload()">
+          </div>
+          <button type="submit"><i class="fas fa-search"></i> Analyze</button>
+        </form>
+      </section>
+      <section class="preview-section" id="preview-section" style="display: none;">
+        <div id="image-preview-container">
+          <img id="image-preview" src="" alt="Image preview">
+        </div>
+      </section>
+    </main>
+    <section class="result-section" id="result-section">
+      <h2><i class="fas fa-clipboard-list"></i> Analysis Results</h2>
+      <div id="response"></div>
+    </section>
+  </div>
+  <div class="gtranslate_wrapper"></div>
+  <script>
+    // Set default language settings
+    window.gtranslateSettings = {
+      "default_language": "en",
+      "detect_browser_language": false,
+      "wrapper_selector": ".gtranslate_wrapper"
+    };
+
+    // Function to ensure English is set as default language
+    function setDefaultLanguage() {
+      if (typeof window.gt === 'object' && window.gt.setLanguage) {
+        window.gt.setLanguage('en');
+      }
+    }
+
+    // Set English as default on page load
+    window.addEventListener('load', setDefaultLanguage);
+
+    // Set English as default after translation widget loads
+    window.addEventListener('gtranslate_loaded', setDefaultLanguage);
+
+    // Handle image upload preview
+    function handleImageUpload() {
+      const input = document.getElementById('image');
+      const preview = document.getElementById('image-preview');
+      const previewSection = document.getElementById('preview-section');
+
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+          previewSection.style.display = 'block';
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+  </script>
+  <script src="/static/script.js"></script>
+  <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+</body>
+</html>
