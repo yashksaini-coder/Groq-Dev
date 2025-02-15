@@ -165,8 +165,7 @@ def contributions ():
 
 @app.route('/api/weather')
 def get_weather():
-    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    ip_api_url = f"http://ip-api.com/json/{user_ip}"
+    ip_api_url = f"http://ip-api.com/json/"
     ip_api_response = requests.get(ip_api_url)
 
     if ip_api_response.status_code == 200:
@@ -191,7 +190,6 @@ def get_weather():
         return jsonify(weather)
     else:
         return jsonify({'error': 'City not found or API request failed'}), 404
-
 
 @app.route('/fetch_image')
 def fetch_image():
